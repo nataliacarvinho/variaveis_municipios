@@ -12,17 +12,31 @@ import os
 import re
 import unicodedata
 from datetime import datetime
+from pathlib import Path
 
 import pandas as pd
+
+
+BASE_DIR = Path(__file__).resolve().parents[2]
 
 
 class MergeConfig:
     """Configuracao padrao do processamento."""
 
     def __init__(self):
-        self.base_file = "../tabelas_processadas/merge_completo_todos_mun_7138_receita.csv"
-        self.fundeb_file = "../tabelas_mae/transferências_para_municípios.csv"
-        self.output_file = "../tabelas_processadas/merge_completo_todos_mun_7138_receita_fundeb.csv"
+        self.base_file = str(
+            BASE_DIR
+            / "prata"
+            / "processamento"
+            / "merge_v2.csv"
+        )
+        self.fundeb_file = str(BASE_DIR / "bronze" / "transferências_para_municípios.csv")
+        self.output_file = str(
+            BASE_DIR
+            / "prata"
+            / "processamento"
+            / "merge_v3.csv"
+        )
 
         self.base_key_col = "Cód."
         self.fundeb_key_col = "Código IBGE"
@@ -190,6 +204,7 @@ def executar_merge(config):
         resultado = resultado.drop(columns=["_codigo_merge"])
 
     print(f"\nSalvando arquivo: {config.output_file}")
+    Path(config.output_file).parent.mkdir(parents=True, exist_ok=True)
     resultado.to_csv(config.output_file, index=False)
 
     print("\nProcesso concluido com sucesso.")

@@ -17,17 +17,21 @@ Mantem a logica mais robusta usada nesta analise, incluindo:
 import argparse
 import os
 from datetime import datetime
+from pathlib import Path
 
 import pandas as pd
+
+
+BASE_DIR = Path(__file__).resolve().parents[2]
 
 
 class MergeConfig:
     """Classe para configurar os parâmetros do merge."""
 
     def __init__(self):
-        self.file1 = "../tabelas_mae/tabela9582.csv"
-        self.file2 = "../tabelas_mae/merge_completo.csv"
-        self.output_file = "../tabelas_processadas/merge_completo_todos_mun.csv"
+        self.file1 = str(BASE_DIR / "bronze" / "tabela9582.csv")
+        self.file2 = str(BASE_DIR / "bronze" / "merge_completo.csv")
+        self.output_file = str(BASE_DIR / "prata" / "processamento" / "merge_v1.csv")
         self.key_file1 = "Cód."
         self.key_file2 = "Cód."
         self.columns_to_merge = ["Total"]
@@ -250,6 +254,7 @@ def fazer_merge(config):
 
     print(f"\nSalvando arquivo: {config.output_file}")
     try:
+        Path(config.output_file).parent.mkdir(parents=True, exist_ok=True)
         df_resultado.to_csv(config.output_file, index=False, encoding=config.encoding)
     except Exception as e:
         print(f"Erro ao salvar arquivo '{config.output_file}': {e}")

@@ -15,18 +15,22 @@ import os
 import re
 import unicodedata
 from datetime import datetime
+from pathlib import Path
 
 import pandas as pd
+
+
+BASE_DIR = Path(__file__).resolve().parents[2]
 
 
 class MergeConfig:
     """Configuracao padrao do merge."""
 
     def __init__(self):
-        self.base_file = "../tabelas_processadas/merge_completo_todos_mun.csv"
-        self.education_file = "../tabelas_mae/tabela7138.csv"
-        self.revenue_file = "../tabelas_mae/0fcf5cfb-9b3d-45b8-80c8-00d6eb180ff6.csv"
-        self.output_file = "../tabelas_processadas/merge_completo_todos_mun_7138_receita.csv"
+        self.base_file = str(BASE_DIR / "prata" / "processamento" / "merge_v1.csv")
+        self.education_file = str(BASE_DIR / "bronze" / "tabela7138.csv")
+        self.revenue_file = str(BASE_DIR / "bronze" / "0fcf5cfb-9b3d-45b8-80c8-00d6eb180ff6.csv")
+        self.output_file = str(BASE_DIR / "prata" / "processamento" / "merge_v2.csv")
 
         self.base_key_code = "Cód."
         self.base_city_col = "Município"
@@ -253,6 +257,7 @@ def executar_merge(config):
     resultado = limpar_colunas_auxiliares(resultado)
 
     print(f"\nSalvando arquivo: {config.output_file}")
+    Path(config.output_file).parent.mkdir(parents=True, exist_ok=True)
     resultado.to_csv(config.output_file, index=False, encoding=config.encoding)
 
     print("\nProcesso concluido com sucesso.")

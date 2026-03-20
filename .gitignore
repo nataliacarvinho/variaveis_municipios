@@ -203,6 +203,14 @@ cython_debug/
 .cursorignore
 .cursorindexingignore
 
+# Projeto: dados e artefatos locais
+/bronze/
+/prata/
+/ouro/
+/tabelas_mae/
+/tabelas_processadas/
+*.xlsx
+
 # Marimo
 marimo/_static/
 marimo/_lsp/
